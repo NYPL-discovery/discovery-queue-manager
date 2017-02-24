@@ -2,33 +2,54 @@
 
 Listens to a queue of documents from a stream, batches them, and sends them down-stream.
 
-## Dev setup
+## Installation
 
-1. Install grunt and node modules
+ ```
+ npm install
+ npm install -g node-lambda
+ ```
 
-   ```
-   npm install grunt -g
-   npm install
-   ```
+## Setup
 
-2. Install Amazon CLI
+```
+node-lambda setup
+```
 
-  ```
-  pip install awscli
-  ```
+Copy `event.sample.json` data into `event.json`. This should resolve to something like this:
 
-3. Set up AWS
+```
+{"id":"doc1","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc2","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc2","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc3","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc3","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc3","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+```
 
-  ```
-  aws configure
-  AWS Access Key ID [None]: ...
-  AWS Secret Access Key [None]: ...
-  Default region name [None]: us-east-1
-  Default output format [None]: json
-  ```
+Fill in credentials in `.env` file to write to stream. At least these:
 
-4. Create/describe Kinesis stream
+```
+AWS_ACCESS_KEY_ID=xxx
+AWS_SECRET_ACCESS_KEY=xxx
+AWS_ROLE_ARN=xxx
+```
 
-  ```
-  grunt init
-  ```
+## Run test
+
+```
+node-lambda run
+```
+
+Should produce data like this to the output stream:
+
+```
+{"id":"doc1","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc2","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc3","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+```
+
+Verify data stream TODO
+
+## Deploy
+
+TODO
