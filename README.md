@@ -15,7 +15,7 @@ Listens to a queue of documents from a stream, batches them, and sends them down
 node-lambda setup
 ```
 
-Copy `event.sample.json` data into `event.json`. This should resolve to something like this:
+Copy `event.sample.json` data into `event.json`. It's encoded in base64, but will eventually resolve to something like this:
 
 ```
 {"id":"doc1","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
@@ -43,9 +43,9 @@ node-lambda run
 Should produce data like this to the output stream:
 
 ```
-{"id":"doc1","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
-{"id":"doc2","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
-{"id":"doc3","type":"test","timestamp":"2017-01-01T12:00:00.000000"}
+{"id":"doc1","type":"test","timestamp":"2017-01-01T12:00:00.000000","size":1}
+{"id":"doc2","type":"test","timestamp":"2017-01-01T12:00:00.000000","size":2}
+{"id":"doc3","type":"test","timestamp":"2017-01-01T12:00:00.000000","size":3}
 ```
 
 Verify data stream TODO

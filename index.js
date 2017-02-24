@@ -38,8 +38,9 @@ exports.kinesisHandler = function(records, context) {
       firstItem = groupItems[0];
     }
     var timestamp = new Date().toISOString();
+    var size = groupItems.length;
     // should have at least an id and timestamp
-    var entry = _.assign({}, firstItem, {'id': groupId, 'timestamp': timestamp});
+    var entry = _.assign({}, firstItem, {'id': groupId, 'timestamp': timestamp, 'size': size});
     return entry;
   }
 
