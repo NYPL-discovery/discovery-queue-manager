@@ -75,4 +75,10 @@ Verify data stream TODO
 
 ## Deploy
 
-TODO
+Deploy to an existing Lambda:
+
+```
+node-lambda deploy --functionName manageDocumentQueue --environment production
+```
+
+Will deploy to a Lambda called `manageDocumentQueue-production`. Add a Kinesis stream trigger to execute function if not already added.
