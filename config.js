@@ -13,7 +13,7 @@ config.kinesisStreamNameIn = 'IndexDocumentQueue';
 config.kinesisStreamNameOut = 'IndexDocument';
 
 // field to group records by
-config.groupByField = 'id';
+config.groupByField = 'uri';
 
 // TODO: delay time in milliseconds (-1 for no delay)
 config.delay = -1;

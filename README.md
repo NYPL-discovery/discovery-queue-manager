@@ -4,23 +4,23 @@ Listens to a queue of documents from a stream, batches them, and sends them down
 
 ## Streaming contract
 
-Expects data like this from stream `IndexDocumentQueue`:
+Expects data like this from stream `IndexDocumentQueue` (using [this avro schema](avro-schema.js)):
 
 ```
-{"id":"doc1","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc2","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc2","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
+<avro encoded> {"uri":"doc1","type":"test"}
+<avro encoded> {"uri":"doc2","type":"test"}
+<avro encoded> {"uri":"doc2","type":"test"}
+<avro encoded> {"uri":"doc3","type":"test"}
+<avro encoded> {"uri":"doc3","type":"test"}
+<avro encoded> {"uri":"doc3","type":"test"}
 ```
 
-Only `id` is required. Everything else except for `timestamp` will be passed along down-stream to stream `IndexDocument` and looks like this:
+Unique document URIs will be passed along down-stream to stream `IndexDocument` and looks like this (using [this avro schema](avro-schema.js)):
 
 ```
-{"id":"doc1","type":"test","timestamp":"2017-02-24T20:09:53.991Z","size":1}
-{"id":"doc2","type":"test","timestamp":"2017-02-24T20:09:53.991Z","size":2}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:53.991Z","size":3}
+<avro encoded> {"uri":"doc1","type":"test"}
+<avro encoded> {"uri":"doc2","type":"test"}
+<avro encoded> {"uri":"doc3","type":"test"}
 ```
 
 ## Installation
@@ -36,15 +36,15 @@ Only `id` is required. Everything else except for `timestamp` will be passed alo
 node-lambda setup
 ```
 
-Copy `event.sample.json` data into `event.json`. It's encoded in base64, but will eventually resolve to something like this:
+Copy `event.sample.json` data into `event.json`. It's encoded with avro schema in base64, but will eventually resolve to something like this:
 
 ```
-{"id":"doc1","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc2","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc2","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:52.991Z"}
+{"uri":"doc1","type":"test"}
+{"uri":"doc2","type":"test"}
+{"uri":"doc2","type":"test"}
+{"uri":"doc3","type":"test"}
+{"uri":"doc3","type":"test"}
+{"uri":"doc3","type":"test"}
 ```
 
 Fill in credentials in `.env` file to write to stream. At least these:
@@ -63,12 +63,12 @@ Update `./config.js` as needed
 node-lambda run
 ```
 
-Should produce data like this to the output stream:
+Should produce data like this to the output stream (using [this avro schema](avro-schema.js)):
 
 ```
-{"id":"doc1","type":"test","timestamp":"2017-02-24T20:09:53.991Z","size":1}
-{"id":"doc2","type":"test","timestamp":"2017-02-24T20:09:53.991Z","size":2}
-{"id":"doc3","type":"test","timestamp":"2017-02-24T20:09:53.991Z","size":3}
+<avro encoded> {"uri":"doc1","type":"test"}
+<avro encoded> {"uri":"doc2","type":"test"}
+<avro encoded> {"uri":"doc3","type":"test"}
 ```
 
 Verify data stream TODO

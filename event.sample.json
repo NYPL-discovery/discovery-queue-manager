@@ -5,7 +5,7 @@
         "kinesisSchemaVersion": "1.0",
         "partitionKey": "s1",
         "sequenceNumber": "00000000000000000000000000000000000000000000000000000001",
-        "data": "eyJpZCI6ImRvYzEiLCJ0eXBlIjoidGVzdCIsInRpbWVzdGFtcCI6IjIwMTctMDEtMDFUMTI6MDA6MDAuMDAwMDAwIn0=",
+        "data": "CGRvYzEIdGVzdA==",
         "approximateArrivalTimestamp": 1428537600
       },
       "eventSource": "aws:kinesis",
@@ -20,7 +20,7 @@
         "kinesisSchemaVersion": "1.0",
         "partitionKey": "s1",
         "sequenceNumber": "00000000000000000000000000000000000000000000000000000002",
-        "data": "eyJpZCI6ImRvYzIiLCJ0eXBlIjoidGVzdCIsInRpbWVzdGFtcCI6IjIwMTctMDEtMDFUMTI6MDA6MDAuMDAwMDAwIn0=",
+        "data": "CGRvYzIIdGVzdA==",
         "approximateArrivalTimestamp": 1428537600
       },
       "eventSource": "aws:kinesis",
@@ -35,7 +35,7 @@
         "kinesisSchemaVersion": "1.0",
         "partitionKey": "s1",
         "sequenceNumber": "00000000000000000000000000000000000000000000000000000003",
-        "data": "eyJpZCI6ImRvYzIiLCJ0eXBlIjoidGVzdCIsInRpbWVzdGFtcCI6IjIwMTctMDEtMDFUMTI6MDA6MDAuMDAwMDAwIn0=",
+        "data": "CGRvYzIIdGVzdA==",
         "approximateArrivalTimestamp": 1428537600
       },
       "eventSource": "aws:kinesis",
@@ -50,7 +50,7 @@
         "kinesisSchemaVersion": "1.0",
         "partitionKey": "s1",
         "sequenceNumber": "00000000000000000000000000000000000000000000000000000004",
-        "data": "eyJpZCI6ImRvYzMiLCJ0eXBlIjoidGVzdCIsInRpbWVzdGFtcCI6IjIwMTctMDEtMDFUMTI6MDA6MDAuMDAwMDAwIn0=",
+        "data": "CGRvYzMIdGVzdA==",
         "approximateArrivalTimestamp": 1428537600
       },
       "eventSource": "aws:kinesis",
@@ -65,7 +65,7 @@
         "kinesisSchemaVersion": "1.0",
         "partitionKey": "s1",
         "sequenceNumber": "00000000000000000000000000000000000000000000000000000005",
-        "data": "eyJpZCI6ImRvYzMiLCJ0eXBlIjoidGVzdCIsInRpbWVzdGFtcCI6IjIwMTctMDEtMDFUMTI6MDA6MDAuMDAwMDAwIn0=",
+        "data": "CGRvYzMIdGVzdA==",
         "approximateArrivalTimestamp": 1428537600
       },
       "eventSource": "aws:kinesis",
@@ -80,7 +80,7 @@
         "kinesisSchemaVersion": "1.0",
         "partitionKey": "s1",
         "sequenceNumber": "00000000000000000000000000000000000000000000000000000006",
-        "data": "eyJpZCI6ImRvYzMiLCJ0eXBlIjoidGVzdCIsInRpbWVzdGFtcCI6IjIwMTctMDEtMDFUMTI6MDA6MDAuMDAwMDAwIn0=",
+        "data": "CGRvYzMIdGVzdA==",
         "approximateArrivalTimestamp": 1428537600
       },
       "eventSource": "aws:kinesis",
