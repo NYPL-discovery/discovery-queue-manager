@@ -104,7 +104,7 @@ exports.kinesisHandler = function(records, context, callback) {
   }
 
   // context.done();
-  callback(null, "Success");
+  callback(null, aggData);
 };
 
 // main function
