@@ -7,7 +7,7 @@ var config = require('./config.js');
 var schema = require('./avro-schema.js');
 
 // kinesis stream handler
-exports.kinesisHandler = function(records, context) {
+exports.kinesisHandler = function(records, context, callback) {
   console.log('Processing ' + records.length + ' records');
 
   // initialize avro schema
@@ -103,13 +103,14 @@ exports.kinesisHandler = function(records, context) {
     });
   }
 
-  context.done();
+  // context.done();
+  callback(null, "Success");
 };
 
 // main function
-exports.handler = function(event, context) {
+exports.handler = function(event, context, callback) {
   var record = event.Records[0];
   if (record.kinesis) {
-    exports.kinesisHandler(event.Records, context);
+    exports.kinesisHandler(event.Records, context, callback);
   }
 };
