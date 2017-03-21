@@ -1,25 +1,18 @@
 console.log('Loading Discovery Queue Manager');
 
-var avro = require('avsc');
-var aws = require('aws-sdk');
-var _ = require('lodash');
-var config = require('./config.js');
-var schema = require('./avro-schema.js');
+const avro = require('avsc');
+const aws = require('aws-sdk');
+const _ = require('lodash');
+const config = require('./config.js');
+const Promise = require('promise');
+const schema = require('./avro-schema.js');
 
 // kinesis stream handler
 exports.kinesisHandler = function(records, context, callback) {
   console.log('Processing ' + records.length + ' records');
 
   // initialize avro schema
-  const type = avro.parse(schema);
-
-  // var entry = {type: "test", uri: "doc1"};
-  // var buf = type.toBuffer(entry);
-  // var encoded = buf.toString('base64');
-  // var decoded = new Buffer(encoded, 'base64');
-  // var verify = type.fromBuffer(decoded);
-  // console.log('Encoded: ' + encoded);
-  // console.log('Decoded: ' + verify);
+  const avroType = avro.parse(schema);
 
   // process kinesis records
   var data = records
@@ -30,7 +23,7 @@ exports.kinesisHandler = function(records, context, callback) {
 
   // aggregate data
   var aggData = _.chain(data)
-    .groupBy(config.groupByField)
+    .groupBy(process.env['GROUP_BY_FIELD'])
     .toPairs()
     .filter(function(pair){ return pair[1] && pair[1].length; })
     .map(aggregateData)
@@ -42,7 +35,11 @@ exports.kinesisHandler = function(records, context, callback) {
     .map(kinesisify)
 
   // post data to stream
-  postData(kinesisData);
+  postData(kinesisData).then(function(res){
+    callback(null, aggData);
+  },function(err){
+    callback(err);
+  });
 
   // aggregate group
   function aggregateData(entryPair) {
@@ -64,24 +61,22 @@ exports.kinesisHandler = function(records, context, callback) {
   }
 
   function avroify(entry){
-    return type.toBuffer(entry);
+    return avroType.toBuffer(entry);
   }
 
   // map to records objects as needed
   function kinesisify(entry) {
     var partitionKey = 'pk-' + guid();
-    var streamName = config.kinesisStreamNameOut;
     var kinesisRecord = {
       'Data': entry,
-      'PartitionKey': partitionKey,
-      'StreamName': streamName
+      'PartitionKey': partitionKey
     }
     return kinesisRecord;
   }
 
   // map to records objects as needed
   function parseData(payload) {
-    var record = type.fromBuffer(payload);
+    var record = avroType.fromBuffer(payload);
     return record;
   }
 
@@ -96,15 +91,23 @@ exports.kinesisHandler = function(records, context, callback) {
     kinesis.region = config.kinesis.region;
     kinesis.endpoint = config.kinesis.endpoint;
 
-    _.forEach(records, function(record) {
-      kinesis.putRecord(record, function(err, data) {
-        if (err) console.log(err);
+    var params = {
+      Records: records,
+      StreamName: process.env['KINESIS_STREAM_NAME_OUT']
+    };
+
+    return new Promise(function (resolve, reject) {
+      kinesis.putRecords(params, function(err, data) {
+        if (err) {
+          console.log(err);
+          reject(err);
+
+        } else {
+          resolve(data);
+        }
       });
     });
   }
-
-  // context.done();
-  callback(null, aggData);
 };
 
 // main function

@@ -6,15 +6,6 @@ config.kinesis = {
   region: 'us-east-1'
 };
 
-// kinesis stream to listen to
-config.kinesisStreamNameIn = 'IndexDocumentQueue';
-
-// kinesis stream to post to
-config.kinesisStreamNameOut = 'IndexDocument';
-
-// field to group records by
-config.groupByField = 'uri';
-
 // TODO: delay time in milliseconds (-1 for no delay)
 config.delay = -1;
 

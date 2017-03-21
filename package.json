@@ -13,6 +13,7 @@
   "dependencies": {
     "avsc": "^4.1.11",
     "aws-sdk": "^2.17.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "promise": "^7.1.1"
   }
 }

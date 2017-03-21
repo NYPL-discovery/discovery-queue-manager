@@ -25,10 +25,10 @@ Unique document URIs will be passed along down-stream to stream `IndexDocument` 
 
 ## Installation
 
- ```
- npm install
- npm install -g node-lambda
- ```
+```
+npm install
+npm install -g node-lambda
+```
 
 ## Setup
 
@@ -50,12 +50,12 @@ Copy `event.sample.json` data into `event.json`. It's encoded with avro schema i
 Fill in credentials in `.env` file to write to stream. At least these:
 
 ```
+KINESIS_STREAM_NAME_OUT=IndexDocument
+GROUP_BY_FIELD=uri
 AWS_ACCESS_KEY_ID=xxx
 AWS_SECRET_ACCESS_KEY=xxx
 AWS_ROLE_ARN=xxx
 ```
-
-Update `./config.js` as needed
 
 ## Run test
 
@@ -71,14 +71,19 @@ Should produce data like this to the output stream (using [this avro schema](avr
 <avro encoded> {"uri":"doc3","type":"test"}
 ```
 
-Verify data stream TODO
-
 ## Deploy
 
-Deploy to an existing Lambda:
+Update `deploy.env` with at least these:
 
 ```
-node-lambda deploy --functionName manageDocumentQueue --environment production
+KINESIS_STREAM_NAME_OUT=IndexDocument
+GROUP_BY_FIELD=uri
+```
+
+Then run:
+
+```
+node-lambda deploy --functionName manageDocumentQueue --environment production --configFile deploy.env
 ```
 
 Will deploy to a Lambda called `manageDocumentQueue-production`. Add a Kinesis stream trigger to execute function if not already added.
