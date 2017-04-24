@@ -20,6 +20,7 @@ exports.kinesisHandler = function(records, context, callback) {
       return new Buffer(record.kinesis.data, 'base64');
     })
     .map(parseData);
+  console.log('data:', data)
 
   // aggregate data
   var aggData = _.chain(data)
@@ -84,31 +85,47 @@ exports.kinesisHandler = function(records, context, callback) {
   function postData(records) {
     console.log('Writing ' + records.length + ' unique records to stream');
 
-    // init kinesis
-    var kinesis = new aws.Kinesis();
-    kinesis.config.region = config.kinesis.region;
-    kinesis.config.endpoint = config.kinesis.endpoint;
-    kinesis.region = config.kinesis.region;
-    kinesis.endpoint = config.kinesis.endpoint;
+    // Chunk records by 500 (max for kinesis.putRecords)
+    return Promise.all(arrayChunk(records, 500).map((chunkRecords) => {
+      // init kinesis
+      var kinesis = new aws.Kinesis();
+      kinesis.config.region = config.kinesis.region;
+      kinesis.config.endpoint = config.kinesis.endpoint;
+      kinesis.region = config.kinesis.region;
+      kinesis.endpoint = config.kinesis.endpoint;
 
-    var params = {
-      Records: records,
-      StreamName: process.env['KINESIS_STREAM_NAME_OUT']
-    };
+      var params = {
+        Records: chunkRecords,
+        StreamName: process.env['KINESIS_STREAM_NAME_OUT']
+      };
 
-    return new Promise(function (resolve, reject) {
-      kinesis.putRecords(params, function(err, data) {
-        if (err) {
-          console.log(err);
-          reject(err);
+      return new Promise(function (resolve, reject) {
+        kinesis.putRecords(params, function(err, data) {
+          if (err) {
+            console.log(err);
+            reject(err);
 
-        } else {
-          resolve(data);
-        }
+          } else {
+            resolve(data);
+          }
+        });
       });
-    });
+    }));
   }
 };
+
+// Chunk array into array of arrays of length <= size
+function arrayChunk (a, size) {
+  return a.reduce((chunks, el) => {
+    if (!chunks[0]) chunks.push([])
+    if (chunks[chunks.length - 1].length === size) chunks.push([])
+
+    chunks[chunks.length - 1].push(el)
+
+    return chunks
+  }, [])
+}
+
 
 // main function
 exports.handler = function(event, context, callback) {
