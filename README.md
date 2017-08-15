@@ -50,8 +50,6 @@ Copy `event.sample.json` data into `event.json`. It's encoded with avro schema i
 Fill in credentials in `.env` file to write to stream. At least these:
 
 ```
-KINESIS_STREAM_NAME_OUT=IndexDocument
-GROUP_BY_FIELD=uri
 AWS_ACCESS_KEY_ID=xxx
 AWS_SECRET_ACCESS_KEY=xxx
 AWS_ROLE_ARN=xxx
@@ -73,17 +71,17 @@ Should produce data like this to the output stream (using [this avro schema](avr
 
 ## Deploy
 
-Update `deploy.env` with at least these:
+Update `deploy[.environment].env` with at least these:
 
 ```
-KINESIS_STREAM_NAME_OUT=IndexDocument
+KINESIS_STREAM_NAME_OUT=IndexDocument[-environmnet]
 GROUP_BY_FIELD=uri
 ```
 
 Then run:
 
 ```
-node-lambda deploy --functionName manageDocumentQueue --environment production --configFile deploy.env
+node-lambda deploy --functionName manageDocumentQueue --environment production --configFile deploy[.environment].env
 ```
 
 Will deploy to a Lambda called `manageDocumentQueue-production`. Add a Kinesis stream trigger to execute function if not already added.
