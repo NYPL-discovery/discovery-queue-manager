@@ -101,8 +101,10 @@ exports.kinesisHandler = function(records, context, callback) {
         if (err) {
           console.log(err);
           reject(err);
-
         } else {
+          if (data.FailedRecordCount > 0) {
+            callback('Failed to post all records to kinesis')
+          }
           resolve(data);
         }
       });
