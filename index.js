@@ -83,7 +83,27 @@ exports.kinesisHandler = function (records, context, callback) {
   function postData (records) {
     console.log('Writing ' + records.length + ' unique records to stream')
 
-    // init kinesis
+    return writeToKinesis(records)
+      .then((response) => {
+        if (response.FailedRecordCount > 0) {
+          var failedRecords = []
+          var responseRecords = response.Records
+          for (var i = 0; i < responseRecords.length; i++) {
+            if (responseRecords[i].ErrorCode) {
+              failedRecords.push(records[i])
+            }
+          }
+          return postData(failedRecords)
+        }
+        return Promise.resolve(response)
+      })
+      .catch((error) => {
+        return Promise.reject(error)
+      })
+  }
+
+  function writeToKinesis (records) {
+     // init kinesis
     var kinesis = new aws.Kinesis()
     kinesis.config.region = config.kinesis.region
     kinesis.config.endpoint = config.kinesis.endpoint
@@ -94,22 +114,7 @@ exports.kinesisHandler = function (records, context, callback) {
       Records: records,
       StreamName: process.env['KINESIS_STREAM_NAME_OUT']
     }
-    writeToKinesis(params).then((response) => {
-      if (response.FailedRecordCount > 0) {
-          var failedRecords = response.Records.filter((responseRecord) => {
-            return responseRecord.ErrorCode
-          })
-          params = {
-            Records: failedRecords,
-            StreamName: process.env['KINESIS_STREAM_NAME_OUT']
-          }
-          return writeToKinesis(params)
-        }
-    })
-  }
-
-  function writeToKinesis (params) {
-    return new Promise(resolve, reject) => {
+    return new Promise((resolve, reject) => {
       return kinesis.putRecords(params, function (err, response) {
         if (err) {
           console.log(err)
@@ -117,7 +122,7 @@ exports.kinesisHandler = function (records, context, callback) {
         }
         resolve(response)
       })
-    }
+    })
   }
 }
 
