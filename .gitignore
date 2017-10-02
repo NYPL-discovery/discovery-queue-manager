@@ -3,7 +3,6 @@ logs
 npm-debug.log*
 node_modules
 .npm
-.env
 deploy.env
 event.json
 context.json
