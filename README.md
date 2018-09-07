@@ -56,4 +56,7 @@ Should produce data like this to the output stream (using [this avro schema](avr
 
 ## Deploy
 
+Travis is configured to deploy automatically to the [development|qa|production] environment from
+the [development|qa|master] branch. In addition, it is possible to deploy manually using the script:
+
 `npm run deploy-[qa|production]`
